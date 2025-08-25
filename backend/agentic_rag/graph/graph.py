@@ -3,9 +3,9 @@ from dotenv import load_dotenv
 from langgraph.graph import END, StateGraph
 
 from graph.state import GraphState
-from graph.consts import RETRIEVE, GENERATE, GRADE_DOCUMENTS, WEBSEARCH
+from graph.consts import RETRIEVE, GENERATE, GRADE_DOCUMENTS, WEBSEARCH, DIRECT_LLM
 from graph.chains import hallucination_grader, answer_grader, question_router
-from graph.nodes import generate, grade_documents, retrieve, web_search
+from graph.nodes import generate, grade_documents, retrieve, web_search, direct_llm_response
 
 
 load_dotenv()
@@ -35,7 +35,8 @@ def grade_generation_grounded_in_documents_and_question(state: GraphState):
     if hallucination_grade := score.binary_score:
         print("---DECISION: GENERATION IS GROUNDED IN DOCUMENTS---")
         print("---CHECK ANSWER---")
-        score = answer_grader.invoke({"question": question, "generation": generation})
+        score = answer_grader.invoke(
+            {"question": question, "generation": generation})
         if answer_grade := score.binary_score:
             print("---DECISION: ANSWER ADDRESSES THE USER QUESTION---")
             return "useful"
@@ -59,6 +60,9 @@ def route_question(state: GraphState):
     elif source.datasource == "vectorstore":
         print("---DECISION: ROUTE QUESTION TO RAG---")
         return RETRIEVE
+    elif source.datasource == "direct_llm":
+        print("---DECISION: ROUTE QUESTION TO DIRECT LLM---")
+        return DIRECT_LLM
 
 
 flow = StateGraph(state_schema=GraphState)
@@ -67,9 +71,11 @@ flow.add_node(RETRIEVE, retrieve)
 flow.add_node(GRADE_DOCUMENTS, grade_documents)
 flow.add_node(GENERATE, generate)
 flow.add_node(WEBSEARCH, web_search)
+flow.add_node(DIRECT_LLM, direct_llm_response)
 
 flow.set_conditional_entry_point(
-    route_question, path_map={RETRIEVE: RETRIEVE, WEBSEARCH: WEBSEARCH}
+    route_question, path_map={RETRIEVE: RETRIEVE,
+                              WEBSEARCH: WEBSEARCH, DIRECT_LLM: DIRECT_LLM}
 )
 
 flow.add_edge(RETRIEVE, GRADE_DOCUMENTS)
@@ -82,11 +88,12 @@ flow.add_conditional_edges(
 flow.add_conditional_edges(
     GENERATE,
     grade_generation_grounded_in_documents_and_question,
-    path_map={"useful": END, "not_useful": WEBSEARCH, "not_supported": GENERATE},
+    path_map={"useful": END, "not_useful": WEBSEARCH,
+              "not_supported": GENERATE},
 )
 
 flow.add_edge(WEBSEARCH, GENERATE)
-flow.add_edge(GENERATE, END)
+flow.add_edge(DIRECT_LLM, END)
 
 app = flow.compile()
 app.get_graph().draw_mermaid_png(output_file_path="graph.png")
