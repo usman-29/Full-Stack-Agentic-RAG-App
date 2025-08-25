@@ -1,4 +1,4 @@
-# 🧠 Agentic RAG - Intelligent Knowledge Assistant
+# 🧠 Full Stack Agentic RAG - Intelligent Knowledge Assistant
 
 <div align="center">
 
@@ -18,7 +18,7 @@
 
 ## 🎯 Overview
 
-**Agentic RAG** is a sophisticated Retrieval-Augmented Generation system that combines the power of Large Language Models with intelligent document retrieval, real-time web search, and conversation memory. Unlike traditional RAG systems, it features **intelligent routing** that automatically determines the best knowledge source for each question and includes **quality control mechanisms** to ensure accurate, trustworthy responses.
+**Full Stack Agentic RAG** is a sophisticated Retrieval-Augmented Generation system that combines the power of Large Language Models with intelligent document retrieval, real-time web search, and conversation memory. Unlike traditional RAG systems, it features **intelligent routing** that automatically determines the best knowledge source for each question and includes **quality control mechanisms** to ensure accurate, trustworthy responses.
 
 ## 🧠 Agentic RAG System
 
@@ -388,9 +388,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-- **🐛 Issues**: [GitHub Issues](https://github.com/yourusername/agentic-rag/issues)
-- **💬 Discussions**: [GitHub Discussions](https://github.com/yourusername/agentic-rag/discussions)
-- **📧 Email**: support@agenticrag.com
+- **🐛 Issues**: [GitHub Issues](https://github.com/usman-29/Full-Stack-Agentic-RAG-App/issues)
+- **💬 Discussions**: [GitHub Discussions](https://github.com/usman-29/Full-Stack-Agentic-RAG-App/discussions)
+- **📧 Email**: suusaeed749@gmail.com
 
 ---
 
@@ -401,3 +401,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 Made with ❤️ by the Agentic RAG Team
 
 </div>
+
